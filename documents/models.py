@@ -15,7 +15,15 @@ class Document(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     notes = models.TextField()
-    status = models.ForeignKey('Status', on_delete=models.CASCADE)
+
+    STATUS_CHOICES = [
+        ('В обработке', 'В обработке'),
+        ('Подписан', 'Подписан'),
+        ('В исполнении', 'В исполнении'),
+        ('Завершен', 'Завершен'),
+    ]
+
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES)
 
     file = models.FileField(upload_to=doc_file_path, null=True)
 
@@ -27,20 +35,6 @@ class Document(models.Model):
 
     def get_absolute_url(self):
         return f'/documents/{self.number}'
-
-
-class Status(models.Model):
-    STATUS_CHOICES = [
-        ('В обработке', 'В обработке'),
-        ('Подписан', 'Подписан'),
-        ('В исполнении', 'В исполнении'),
-        ('Завершен', 'Завершен'),
-    ]
-
-    status = models.CharField(max_length=20, choices=STATUS_CHOICES)
-
-    def __str__(self):
-        return self.status
 
 
 class Duty(models.Model):
