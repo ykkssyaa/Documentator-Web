@@ -40,6 +40,7 @@ class Document(models.Model):
 class Duty(models.Model):
     title = models.CharField(max_length=100)
     document = models.ForeignKey(Document, on_delete=models.CASCADE)
+    done = models.BooleanField(default=False)
 
     def __str__(self):
         return self.title

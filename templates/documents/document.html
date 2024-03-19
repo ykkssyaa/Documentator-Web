@@ -1,0 +1,29 @@
+{% extends 'documents/document_base.html' %}
+{% block content %}
+
+    <h1>{{ document.title }}</h1>
+    <h2> Номер: #{{ document.number }}</h2>
+
+    <p> Статус <span>{{ document.status }}</span></p>
+    <p> Дата подписания <span>{{ document.signing_date }}</span></p>
+    <p> Дата изменения <span>{{ document.end_date }}</span></p>
+
+    <h3> Обязательства </h3>
+    <div>
+        <ul>
+            {% for duty in document.duty_set.all %}
+                <li>
+                    <label>{{ duty.title }}
+                        <input type="checkbox" {% if duty.done %}checked{% endif %} disabled>
+                    </label>
+                </li>
+            {% endfor %}
+        </ul>
+
+    </div>
+
+    <h3> Заметки </h3>
+    <div>{{ document.notes }}</div>
+
+{% endblock %}
+

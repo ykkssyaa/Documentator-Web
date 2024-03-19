@@ -6,6 +6,10 @@ from .models import *
 
 class DocumentPage(DetailView):
     model = Document
+    slug_url_kwarg = 'number'
+    slug_field = 'number'
+    template_name = 'documents/document.html'
+    context_object_name = 'document'
 
     def get_context_data(self, **kwargs):
         context = super(DocumentPage, self).get_context_data(**kwargs)
