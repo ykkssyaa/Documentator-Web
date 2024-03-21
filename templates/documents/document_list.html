@@ -29,7 +29,8 @@
                     <td><a href="{% url 'documents:update' number=document.number %}"
                            class="edit-button">Редактировать</a>
 
-                        <form action="{% url 'documents:delete' pk=document.pk %}" method="post" style="display: inline;">
+                        <form action="{% url 'documents:delete' pk=document.pk %}" method="post"
+                              style="display: inline;">
                             {% csrf_token %}
                             <input type="hidden" name="next" value="{{ request.path }}?edit=1">
                             <button type="submit" class="delete-button">Удалить</button>
@@ -38,13 +39,16 @@
                 {% else %}
                     <td>
                         {% for duty in document.duty_set.all|slice:":3" %}
-                            <span>{{ duty.title}} </span>
+                            <span>{{ duty.title }} </span>
                         {% endfor %}
+                        {% if document.duty_set.count > 3 %}
+                            <span>...</span>
+                        {% endif %}
                     </td>
                 {% endif %}
 
-            <td>{{ document.status }}</td>
-            </td>
+                <td>{{ document.status }}</td>
+                </td>
             </tr>
         {% endfor %}
         </tbody>

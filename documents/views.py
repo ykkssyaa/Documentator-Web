@@ -1,4 +1,4 @@
-from django.http import Http404
+from django.http import Http404, JsonResponse
 from django.utils import timezone
 
 from django.contrib.auth.decorators import login_required
@@ -123,3 +123,23 @@ class NotificationsListView(ListView):
         except Http404:
             # Если список пуст, просто возвращаем пустой queryset
             return Document.objects.none()
+
+
+class DutyUpdateView(View):
+    def post(self, request, duty_id, *args, **kwargs):
+        # Получаем объект обязательства (Duty) по его идентификатору
+        duty = Duty.objects.get(pk=duty_id)
+
+        # Проверяем, что запрос содержит значение done
+        if 'done' in request.POST:
+            # Обновляем значение done
+            duty.done = request.POST['done'] == 'true'  # Преобразуем строку 'true' в булево значение True
+
+            # Сохраняем изменения в базе данных
+            duty.save()
+
+            # Возвращаем JSON-ответ, чтобы обновить представление на стороне клиента
+            return JsonResponse({'success': True})
+
+        # Если значение done отсутствует в запросе, возвращаем ошибку
+        return JsonResponse({'success': False, 'error': 'Invalid request'})
