@@ -3,6 +3,7 @@ from django.urls import path
 import documents.views as views
 
 urlpatterns = [
+    path('duty/<int:duty_id>/update/', login_required(views.DutyUpdateView.as_view()), name='update_duty'),
     path('notifications', login_required(views.NotificationsListView.as_view()), name='notifications'),
     path('', login_required(views.DocumentListView.as_view()), name='list'),
     path('create', login_required(views.DocumentCreateView.as_view()), name='create'),

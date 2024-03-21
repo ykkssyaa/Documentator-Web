@@ -3,6 +3,8 @@ from django.contrib.auth.views import LoginView
 from django.http import HttpResponseNotFound, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse_lazy
+from django.views import View
+from django.views.generic import TemplateView
 
 from users.forms import LoginUserForm
 
@@ -23,3 +25,8 @@ class LoginUser(LoginView):
 def logout_user(request):
     logout(request)
     return HttpResponseRedirect(reverse_lazy('users:login'))
+
+
+class Settings(TemplateView):
+    template_name = 'users/settings.html'
+    extra_context = {'title': 'Настройки'}
