@@ -9,13 +9,13 @@
         <input type="hidden" name="next" value="{% url 'documents:list' %}">
         <button type="submit">Удалить</button>
     </form>
-    
+
     <h1>{{ document.title }}</h1>
     <h2> Номер: #{{ document.number }}</h2>
 
     <p> Статус <span>{{ document.status }}</span></p>
     <p> Дата подписания <span>{{ document.signing_date }}</span></p>
-    <p> Дата изменения <span>{{ document.end_date }}</span></p>
+    <p> Дата завершения <span>{{ document.end_date }}</span></p>
 
     <div>
         <a href="{{ document.file.url }}">Файл</a>

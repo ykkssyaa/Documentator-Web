@@ -1,3 +1,4 @@
+from django.http import Http404
 from django.utils import timezone
 
 from django.contrib.auth.decorators import login_required
@@ -68,6 +69,7 @@ class DocumentListView(ListView):
 
         edit_arg = self.request.GET.get('edit')
         if edit_arg:
+            context['title'] = 'Редактирование договоров'
             context['edit'] = 1
 
         return context
@@ -89,16 +91,12 @@ class DocumentDeleteView(View):
 
 class NotificationsListView(ListView):
     model = Document
-    template_name = 'documents/document_list.html'
+    template_name = 'documents/notifications.html'
     context_object_name = 'documents'
 
     def get_context_data(self, **kwargs):
         context = super(NotificationsListView, self).get_context_data(**kwargs)
         context['title'] = 'Уведомления'
-
-        edit_arg = self.request.GET.get('edit')
-        if edit_arg:
-            context['edit'] = 1
 
         return context
 
@@ -110,7 +108,7 @@ class NotificationsListView(ListView):
         week_from_now = current_date + timezone.timedelta(days=7)
 
         # Фильтруем документы, у которых end_date находится в пределах недели от текущей даты
-        queryset = Document.objects.filter(end_date__lte=week_from_now)
+        queryset = Document.objects.filter(end_date__lte=week_from_now, status__in=['В обработке', 'Подписан', 'В исполнении'])
 
         # Для каждого документа вычисляем количество дней до конца договора
         for document in queryset:
@@ -118,3 +116,10 @@ class NotificationsListView(ListView):
             document.remaining_days = remaining_days
 
         return queryset
+
+    def get(self, request, *args, **kwargs):
+        try:
+            return super().get(request, *args, **kwargs)
+        except Http404:
+            # Если список пуст, просто возвращаем пустой queryset
+            return Document.objects.none()
