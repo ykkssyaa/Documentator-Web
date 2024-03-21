@@ -1,12 +1,26 @@
 {% extends 'documents/document_base.html' %}
 {% block content %}
 
+    <a href="{% url 'documents:list' %}">Вернуться к списку документов</a>
+    <a href="{% url 'documents:update' number=document.number %}">Изменить</a>
+
+    <form action="{% url 'documents:delete' pk=document.pk %}" method="post">
+        {% csrf_token %}
+        <input type="hidden" name="next" value="{% url 'documents:list' %}">
+        <button type="submit">Удалить</button>
+    </form>
+    
     <h1>{{ document.title }}</h1>
     <h2> Номер: #{{ document.number }}</h2>
 
     <p> Статус <span>{{ document.status }}</span></p>
     <p> Дата подписания <span>{{ document.signing_date }}</span></p>
     <p> Дата изменения <span>{{ document.end_date }}</span></p>
+
+    <div>
+        <a href="{{ document.file.url }}">Файл</a>
+
+    </div>
 
     <h3> Обязательства </h3>
     <div>

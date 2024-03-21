@@ -1,10 +1,19 @@
 {% extends 'base.html' %}
 {% block cnt %}
 
-    <div> 
+    <nav>
+        <a href="{% url 'documents:list' %}">Договоры</a>
+        <a href="{% url 'documents:list' %}">Доступ должностей</a>
+        <a href="{% url 'documents:list' %}?edit=1">Редактирование договоров</a>
+        <a href="{% url 'documents:list' %}">Уведомления</a>
+        <a href="{% url 'documents:list' %}">Настройки</a>
+
+    </nav>
+
+    <div class="docs-content">
         {% block content %}
-            
+
         {% endblock %}
     </div>
-    
+
 {% endblock %}

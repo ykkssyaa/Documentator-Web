@@ -10,7 +10,7 @@ def doc_file_path(instance, filename):
 
 class Document(models.Model):
     title = models.CharField(max_length=100)
-    number = models.CharField(max_length=10)
+    number = models.CharField(max_length=10, unique=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 

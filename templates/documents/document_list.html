@@ -1,0 +1,53 @@
+{% extends 'documents/document_base.html' %}
+{% block content %}
+
+    <h1>Список договоров</h1>
+    <table>
+        <thead>
+        <tr>
+            <th>Название</th>
+            <th>Номер</th>
+            <th>Дата создания</th>
+            {% if edit %}
+                <th>Действия</th>
+            {% else %}
+                <th>Обязательства</th>
+            {% endif %}
+            <th>Статус</th>
+        </tr>
+        <tr>
+            <th colspan="5"><a href="{% url 'documents:create' %}" class="create-button">Создать новый договор</a></th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for document in documents %}
+            <tr>
+                <td><a href="{% url 'documents:document' number=document.number %}">{{ document.title }}</a></td>
+                <td>{{ document.number }}</td>
+                <td>{{ document.created_at }}</td>
+                {% if edit %}
+                    <td><a href="{% url 'documents:update' number=document.number %}"
+                           class="edit-button">Редактировать</a>
+
+                        <form action="{% url 'documents:delete' pk=document.pk %}" method="post" style="display: inline;">
+                            {% csrf_token %}
+                            <input type="hidden" name="next" value="{{ request.path }}?edit=1">
+                            <button type="submit" class="delete-button">Удалить</button>
+                        </form>
+                    </td>
+                {% else %}
+                    <td>
+                        {% for duty in document.duty_set.all|slice:":3" %}
+                            <span>{{ duty.title}} </span>
+                        {% endfor %}
+                    </td>
+                {% endif %}
+
+            <td>{{ document.status }}</td>
+            </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+{% endblock %}
