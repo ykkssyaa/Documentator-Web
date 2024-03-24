@@ -1,8 +1,16 @@
 {% extends 'documents/document_base.html' %}
 {% block content %}
 
-    <h1>{{ title }}</h1>
-    <table>
+    <div class="row">
+        <h1 class="col-7">{{ title }}</h1>
+        <div class="col-4">
+            {% if perms.documents.add_document %}
+                <a href="{% url 'documents:create' %}" class="w-100 btn btn-lg btn-primary">Создать новый договор</a>
+            {% endif %}
+        </div>
+    </div>
+
+    <table class="table mt-3 table-bordered align-middle">
         <thead>
         <tr>
             <th>Название</th>
@@ -15,19 +23,14 @@
             {% endif %}
             <th>Статус</th>
         </tr>
-        <tr>
-            {% if perms.documents.add_document %}
-                <th colspan="5"><a href="{% url 'documents:create' %}" class="create-button">Создать новый договор</a></th>
-            {% endif %}
-
-        </tr>
         </thead>
+
         <tbody>
         {% for document in documents %}
             <tr>
                 <td><a href="{% url 'documents:document' number=document.number %}">{{ document.title }}</a></td>
-                <td>{{ document.number }}</td>
-                <td>{{ document.created_at }}</td>
+                <td>#{{ document.number }}</td>
+                <td>{{ document.signing_date.date }}</td>
                 {% if edit %}
                     <td>
                         {% if perms.documents.change_document %}
@@ -49,7 +52,7 @@
                 {% else %}
                     <td>
                         {% for duty in document.duty_set.all|slice:":3" %}
-                            <span>{{ duty.title }} </span>
+                            <span class="badge bg-secondary">{{ duty.title }} </span>
                         {% endfor %}
                         {% if document.duty_set.count > 3 %}
                             <span>...</span>
@@ -57,7 +60,7 @@
                     </td>
                 {% endif %}
 
-                <td>{{ document.status }}</td>
+                <td><span class="badge bg-primary"> {{ document.status }} </span></td>
 
             </tr>
         {% endfor %}

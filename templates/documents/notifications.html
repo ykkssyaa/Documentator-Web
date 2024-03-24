@@ -2,7 +2,7 @@
 {% block content %}
 
     <h1>Уведомления</h1>
-    <table>
+    <table class="table mt-3 table-bordered align-middle">
         <thead>
         <tr>
             <th>Название</th>
@@ -17,9 +17,9 @@
             <tr>
                 <td><a href="{% url 'documents:document' number=document.number %}">{{ document.title }}</a></td>
                 <td>{{ document.number }}</td>
-                <td>{{ document.end_date }}</td>
-                <td>{{ document.remaining_days }}</td>
-                <td>{{ document.status }}</td>
+                <td>{{ document.end_date.date }}</td>
+                <td><span class="badge bg-danger">{{ document.remaining_days }}</span></td>
+                <td><span class="badge bg-primary">{{ document.status }}</span></td>
             </tr>
         {% endfor %}
         </tbody>

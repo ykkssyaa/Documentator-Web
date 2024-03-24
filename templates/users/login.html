@@ -1,11 +1,43 @@
 {% extends 'base.html' %}
 {% block cnt %}
-    <div class="container">
-        <h2>{{ title }}</h2>
-        <form method="post">
-            {% csrf_token %}
-            {{ form.as_p }}
-            <button type="submit">Войти</button>
-        </form>
+
+    <style>
+        .form-input {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+
+        button[type="submit"] {
+            width: 50%;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            background-color: #007bff;
+            color: #fff;
+            cursor: pointer;
+        }
+
+        button[type="submit"]:hover {
+            background-color: #0056b3;
+        }
+
+    </style>
+
+    <div>
+        <div class="box_with_shadow">
+            <h2 style="text-align: center">{{ title }}</h2>
+            <form method="post">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <div style="text-align: center; padding-top: 10px">
+                    <button class="btn btn-lg btn-primary " type="submit">Войти</button>
+                </div>
+
+            </form>
+        </div>
     </div>
 {% endblock %}

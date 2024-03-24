@@ -11,6 +11,17 @@ class DocumentForm(forms.ModelForm):
     class Meta:
         model = Document
         fields = '__all__'
+        labels = {
+            'title': 'Заголовок',
+            'number': 'Номер',
+            'created_at': 'Дата создания',
+            'updated_at': 'Дата обновления',
+            'notes': 'Примечания',
+            'status': 'Статус',
+            'file': 'Файл',
+            'signing_date': 'Дата подписания',
+            'end_date': 'Дата завершения',
+        }
 
     def save(self, commit=True):
         document = super().save(commit=False)

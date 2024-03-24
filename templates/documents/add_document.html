@@ -2,11 +2,11 @@
 {% block content %}
 
     <h1>{{ title }}</h1>
-    <form method="POST" enctype="multipart/form-data">
+    <form method="POST" enctype="multipart/form-data" class="form">
         {% csrf_token %}
         {{ form.as_p }}
 
-        <button type="submit">Сохранить</button>
+        <button class="btn btn-lg btn-primary" type="submit">Сохранить</button>
     </form>
 
 {% endblock %}

@@ -1,28 +1,37 @@
 {% extends 'base.html' %}
 {% block cnt %}
+    <div class="container row h-auto">
+        <nav class="col-3  p-0">
+            <div class="box_with_shadow  p-0">
+                <a class="w-100 btn btn-lg btn-primary mb-2" href="{% url 'documents:list' %}">Договоры</a>
 
-    <nav>
-        <a class="btn btn-primary" href="{% url 'documents:list' %}">Договоры</a>
+                {% if perms.documents.change_permissions %}
+                    <a class="w-100 btn btn-lg btn-primary mb-2" href="{% url 'documents:list' %}">Доступ должностей</a>
+                {% endif %}
 
-        {% if perms.documents.change_permissions %}
-            <a href="{% url 'documents:list' %}">Доступ должностей</a>
-        {% endif %}
+                {% if perms.documents.change_document and perms.documents.delete_document %}
+                    <a href="{% url 'documents:list' %}?edit=1" class=" w-100 btn-lg btn btn-primary mb-2">Редактирование
+                        договоров</a>
+                {% else %}
+                    <button type="button" class="mb-2 btn-lg w-100 btn btn-secondary disabled">Редактирование договоров
+                    </button>
+                {% endif %}
 
-        {% if perms.documents.change_document and perms.documents.delete_document %}
-            <a href="{% url 'documents:list' %}?edit=1" class="btn btn-primary">Редактирование договоров</a>
-        {% else %}
-            <button type="button" class="btn btn-secondary disabled">Редактирование договоров</button>
-        {% endif %}
+                <a class="w-100 btn btn-lg btn-primary mb-2" href="{% url 'documents:notifications' %}">Уведомления</a>
+                <a class="w-100 btn btn-lg btn-primary mb-2" href="{% url 'users:settings' %}">Настройки</a>
 
-        <a class="btn btn-primary" href="{% url 'documents:notifications' %}">Уведомления</a>
-        <a class="btn btn-primary" href="{% url 'users:settings' %}">Настройки</a>
+            </div>
 
-    </nav>
+        </nav>
 
-    <div class="docs-content">
-        {% block content %}
+        <div class="col-9 px-4">
+            <div class="box_with_shadow w-auto h-100">
+                {% block content %}
 
-        {% endblock %}
+                {% endblock %}
+            </div>
+        </div>
+
     </div>
 
 {% endblock %}

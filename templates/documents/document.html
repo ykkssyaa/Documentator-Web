@@ -2,55 +2,78 @@
 {% load static %}
 {% block content %}
 
-    <a class="btn btn-primary" href="{% url 'documents:list' %}">Вернуться к списку документов</a>
-
-    {% if perms.documents.change_document %}
-        <a class="btn btn-primary" href="{% url 'documents:update' number=document.number %}">Изменить</a>
-    {% endif %}
-
-
-    {% if perms.documents.delete_document %}
-        <form action="{% url 'documents:delete' pk=document.pk %}" method="post">
-            {% csrf_token %}
-            <input type="hidden" name="next" value="{% url 'documents:list' %}">
-            <button class="btn btn-danger" type="submit">Удалить</button>
-        </form>
-    {% endif %}
+    <a class="btn btn-secondary mb-5" href="{% url 'documents:list' %}">Вернуться к списку документов</a>
 
     <h1>{{ document.title }}</h1>
-    <h2> Номер: #{{ document.number }}</h2>
 
-    <p> Статус <span>{{ document.status }}</span></p>
-    <p> Дата подписания <span>{{ document.signing_date }}</span></p>
-    <p> Дата завершения <span>{{ document.end_date }}</span></p>
+    <div class="row">
+        <h4 class="col-9"> Номер: #{{ document.number }}</h4>
 
-    <div>
-        <a class="file-link" href="{{ document.file.url }}">Файл</a>
+        <div class="col-2">
+            <a class="file-link btn btn-lg btn-link" href="{{ document.file.url }}">Файл</a>
+        </div>
     </div>
 
-    <h3> Обязательства </h3>
-    <div>
-        <ul>
-            {% for duty in document.duty_set.all %}
-                <li>
-                    <label>{{ duty.title }}
-                        <input type="checkbox"
-                               class="duty-checkbox"
-                               data-duty-id="{{ duty.id }}"
-                               {% if duty.done %}checked{% endif %}
-                               {% if not perms.documents.change_duty %}
-                                    disabled
-                               {% endif %}
-                        >
-                    </label>
-                </li>
-            {% endfor %}
-        </ul>
+    <div class="row border-bottom border-top">
+        <div class="col-7">
+            <p class="p-0 m-0"> Дата подписания <span>{{ document.signing_date.date }}</span></p>
+            <p class="p-0 m-0"> Дата завершения <span>{{ document.end_date.date }}</span></p>
+        </div>
+        <div class="col-5 align-items-center d-flex">
+            <p> Статус <span class="badge bg-primary">{{ document.status }}</span></p>
+        </div>
+    </div>
+
+    <div class="border-bottom mb-4 row mt-4">
+        <div class="col-5 border-end">
+            <h3> Обязательства </h3>
+            <ul>
+                {% for duty in document.duty_set.all %}
+                    <li>
+                        <label>{{ duty.title }}
+                            <input type="checkbox"
+                                   class="duty-checkbox"
+                                   data-duty-id="{{ duty.id }}"
+                                   {% if duty.done %}checked{% endif %}
+                                    {% if not perms.documents.change_duty %}
+                                   disabled
+                                    {% endif %}
+                            >
+                        </label>
+                    </li>
+                {% endfor %}
+            </ul>
+
+        </div >
+
+        <div class="col-7">
+            <h3> Заметки </h3>
+            <div>{{ document.notes }}</div>
+        </div>
 
     </div>
 
-    <h3> Заметки </h3>
-    <div>{{ document.notes }}</div>
+
+    <div class="row">
+
+        <div class="col-2">
+            {% if perms.documents.change_document %}
+                <a class="btn btn-primary" href="{% url 'documents:update' number=document.number %}">Редактировать</a>
+            {% endif %}
+        </div>
+
+
+        <div class="col-2">
+            {% if perms.documents.delete_document %}
+                <form action="{% url 'documents:delete' pk=document.pk %}" method="post">
+                    {% csrf_token %}
+                    <input type="hidden" name="next" value="{% url 'documents:list' %}">
+                    <button class="btn btn-danger" type="submit">Удалить</button>
+                </form>
+            {% endif %}
+        </div>
+
+    </div>
 
     <div id="csrf-token" data-csrf-token="{{ csrf_token }}"></div>
     <script src="{% static 'js/duty_checkbox.js' %}"></script>
