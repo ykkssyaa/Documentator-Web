@@ -1,7 +1,8 @@
-from django.http import Http404, JsonResponse
+from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
+from django.http import Http404, JsonResponse, HttpResponseRedirect
 from django.utils import timezone
 
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, permission_required
 from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse_lazy, reverse
 from django.views import View
@@ -11,7 +12,7 @@ from .forms import DocumentForm
 from .models import *
 
 
-class DocumentPage(DetailView):
+class DocumentPage(LoginRequiredMixin, DetailView):
     model = Document
     slug_url_kwarg = 'number'
     slug_field = 'number'
@@ -24,19 +25,20 @@ class DocumentPage(DetailView):
         return context
 
 
-class DocumentCreateView(CreateView):
+class DocumentCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
     model = Document
     form_class = DocumentForm
     template_name = 'documents/add_document.html'
     extra_context = {
         'title': 'Создание договора',
     }
+    permission_required = 'documents.add_document'
 
     def get_success_url(self):
         return reverse('documents:document', kwargs={'number': self.object.number})
 
 
-class DocumentUpdateView(UpdateView):
+class DocumentUpdateView(LoginRequiredMixin,PermissionRequiredMixin, UpdateView):
     model = Document
     form_class = DocumentForm
     template_name = 'documents/add_document.html'
@@ -45,6 +47,7 @@ class DocumentUpdateView(UpdateView):
     }
     slug_url_kwarg = 'number'
     slug_field = 'number'
+    permission_required = 'documents.change_document'
 
     def get_initial(self):
         initial = super().get_initial()
@@ -58,7 +61,7 @@ class DocumentUpdateView(UpdateView):
         return reverse('documents:document', kwargs={'number': self.object.number})
 
 
-class DocumentListView(ListView):
+class DocumentListView(LoginRequiredMixin, ListView):
     model = Document
     template_name = 'documents/document_list.html'
     context_object_name = 'documents'
@@ -75,7 +78,9 @@ class DocumentListView(ListView):
         return context
 
 
-class DocumentDeleteView(View):
+class DocumentDeleteView(LoginRequiredMixin, PermissionRequiredMixin,View):
+    permission_required = 'documents.delete_document'
+
     def post(self, request, pk):
         document = get_object_or_404(Document, pk=pk)
 
@@ -89,7 +94,7 @@ class DocumentDeleteView(View):
         return redirect(next_url)
 
 
-class NotificationsListView(ListView):
+class NotificationsListView(LoginRequiredMixin, ListView):
     model = Document
     template_name = 'documents/notifications.html'
     context_object_name = 'documents'
@@ -125,7 +130,9 @@ class NotificationsListView(ListView):
             return Document.objects.none()
 
 
-class DutyUpdateView(View):
+class DutyUpdateView(LoginRequiredMixin, PermissionRequiredMixin, View):
+    permission_required = 'documents.change_duty'
+
     def post(self, request, duty_id, *args, **kwargs):
         # Получаем объект обязательства (Duty) по его идентификатору
         duty = Duty.objects.get(pk=duty_id)
@@ -143,3 +150,13 @@ class DutyUpdateView(View):
 
         # Если значение done отсутствует в запросе, возвращаем ошибку
         return JsonResponse({'success': False, 'error': 'Invalid request'})
+
+
+@login_required
+@permission_required('documents.delete_document')
+def delete_all_documents(request):
+    if request.method == 'POST':
+        # Удаляем все документы
+        Document.objects.all().delete()
+        
+    return redirect('users:settings')

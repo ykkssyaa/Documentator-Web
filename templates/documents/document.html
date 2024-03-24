@@ -2,14 +2,20 @@
 {% load static %}
 {% block content %}
 
-    <a href="{% url 'documents:list' %}">Вернуться к списку документов</a>
-    <a href="{% url 'documents:update' number=document.number %}">Изменить</a>
+    <a class="btn btn-primary" href="{% url 'documents:list' %}">Вернуться к списку документов</a>
 
-    <form action="{% url 'documents:delete' pk=document.pk %}" method="post">
-        {% csrf_token %}
-        <input type="hidden" name="next" value="{% url 'documents:list' %}">
-        <button type="submit">Удалить</button>
-    </form>
+    {% if perms.documents.change_document %}
+        <a class="btn btn-primary" href="{% url 'documents:update' number=document.number %}">Изменить</a>
+    {% endif %}
+
+
+    {% if perms.documents.delete_document %}
+        <form action="{% url 'documents:delete' pk=document.pk %}" method="post">
+            {% csrf_token %}
+            <input type="hidden" name="next" value="{% url 'documents:list' %}">
+            <button class="btn btn-danger" type="submit">Удалить</button>
+        </form>
+    {% endif %}
 
     <h1>{{ document.title }}</h1>
     <h2> Номер: #{{ document.number }}</h2>
@@ -19,8 +25,7 @@
     <p> Дата завершения <span>{{ document.end_date }}</span></p>
 
     <div>
-        <a href="{{ document.file.url }}">Файл</a>
-
+        <a class="file-link" href="{{ document.file.url }}">Файл</a>
     </div>
 
     <h3> Обязательства </h3>
@@ -33,7 +38,9 @@
                                class="duty-checkbox"
                                data-duty-id="{{ duty.id }}"
                                {% if duty.done %}checked{% endif %}
-                               {% if request.user.username != "Исполнитель" %}disabled{% endif %}
+                               {% if not perms.documents.change_duty %}
+                                    disabled
+                               {% endif %}
                         >
                     </label>
                 </li>

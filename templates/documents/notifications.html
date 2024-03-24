@@ -9,7 +9,6 @@
             <th>Номер</th>
             <th>Дата завершения</th>
             <th>Дней осталось</th>
-            <th>Действия</th>
             <th>Статус</th>
         </tr>
         </thead>
@@ -20,14 +19,6 @@
                 <td>{{ document.number }}</td>
                 <td>{{ document.end_date }}</td>
                 <td>{{ document.remaining_days }}</td>
-                <td>
-                    <a href="{% url 'documents:update' number=document.number %}" class="edit-button">Редактировать</a>
-                    <form action="{% url 'documents:delete' pk=document.pk %}" method="post" style="display: inline;">
-                        {% csrf_token %}
-                        <input type="hidden" name="next" value="{{ request.path }}">
-                        <button type="submit" class="delete-button">Удалить</button>
-                    </form>
-                </td>
                 <td>{{ document.status }}</td>
             </tr>
         {% endfor %}

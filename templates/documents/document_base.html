@@ -2,11 +2,20 @@
 {% block cnt %}
 
     <nav>
-        <a href="{% url 'documents:list' %}">Договоры</a>
-        <a href="{% url 'documents:list' %}">Доступ должностей</a>
-        <a href="{% url 'documents:list' %}?edit=1">Редактирование договоров</a>
-        <a href="{% url 'documents:notifications' %}">Уведомления</a>
-        <a href="{% url 'users:settings' %}">Настройки</a>
+        <a class="btn btn-primary" href="{% url 'documents:list' %}">Договоры</a>
+
+        {% if perms.documents.change_permissions %}
+            <a href="{% url 'documents:list' %}">Доступ должностей</a>
+        {% endif %}
+
+        {% if perms.documents.change_document and perms.documents.delete_document %}
+            <a href="{% url 'documents:list' %}?edit=1" class="btn btn-primary">Редактирование договоров</a>
+        {% else %}
+            <button type="button" class="btn btn-secondary disabled">Редактирование договоров</button>
+        {% endif %}
+
+        <a class="btn btn-primary" href="{% url 'documents:notifications' %}">Уведомления</a>
+        <a class="btn btn-primary" href="{% url 'users:settings' %}">Настройки</a>
 
     </nav>
 

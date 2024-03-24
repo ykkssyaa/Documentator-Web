@@ -1,36 +1,55 @@
 <!DOCTYPE html>
+{% load static %}
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <title>{{ title }}</title>
-    <link rel="icon" type="image/png" href="{% url 'favicon' %} ">
+    <link rel="icon" type="image/png" href="{% url 'favicon' %}">
+
+    <link rel="stylesheet" type="text/css" href="{% static 'css/document_page.css' %}">
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
 </head>
-<body>
+<body class="p-2">
 
-    <header>
+<header class="row align-items-center border-bottom mb-4">
+    {% if request.user.is_authenticated %}
+        <div class="col-3">
+            <a class="btn btn-danger text-decoration-none" href="{% url 'users:logout' %}">Выйти</a>
+        </div>
 
-        {% if request.user.is_authenticated %}
+    {% endif %}
+    <h1 class="col-8 text-center">Documentator</h1>
 
-            <a href="{% url 'users:logout' %}">Выйти</a>
-            <h2>{{ request.user.username }}</h2>
-        {% endif %}
+    {% if request.user.is_authenticated %}
+        <div class="col-2"><h2 class="">{{ request.user.username }}</h2></div>
+    {% endif %}
 
-        <h1>Documentator</h1>
-    
-        
-        <hr>
-    </header>
+</header>
 
-    <main>
-        {% block cnt %}
-    
-        {% endblock %}
-    </main>
+<main>
+    <div class="container">
+        <div class="row">
+            <div class="col">
+                {% block cnt %}
 
+                {% endblock %}
+            </div>
+        </div>
+    </div>
+</main>
 
-    <footer>
-        <hr>
-    </footer>
+<footer class="mt-5 border-top pt-3">
+    <div class="text-center">
+        <p>&copy; 2024 Documentator</p>
+    </div>
+</footer>
 
-</body>
-</html>
+<!-- Bootstrap JS and jQuery -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+        integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+        crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWt

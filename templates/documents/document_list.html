@@ -16,7 +16,10 @@
             <th>Статус</th>
         </tr>
         <tr>
-            <th colspan="5"><a href="{% url 'documents:create' %}" class="create-button">Создать новый договор</a></th>
+            {% if perms.documents.add_document %}
+                <th colspan="5"><a href="{% url 'documents:create' %}" class="create-button">Создать новый договор</a></th>
+            {% endif %}
+
         </tr>
         </thead>
         <tbody>
@@ -26,15 +29,22 @@
                 <td>{{ document.number }}</td>
                 <td>{{ document.created_at }}</td>
                 {% if edit %}
-                    <td><a href="{% url 'documents:update' number=document.number %}"
-                           class="edit-button">Редактировать</a>
+                    <td>
+                        {% if perms.documents.change_document %}
+                            <a href="{% url 'documents:update' number=document.number %}"
+                               class="edit-button btn btn-primary">Редактировать</a>
+                        {% endif %}
 
-                        <form action="{% url 'documents:delete' pk=document.pk %}" method="post"
-                              style="display: inline;">
-                            {% csrf_token %}
-                            <input type="hidden" name="next" value="{{ request.path }}?edit=1">
-                            <button type="submit" class="delete-button">Удалить</button>
-                        </form>
+
+                        {% if perms.documents.delete_document %}
+                            <form action="{% url 'documents:delete' pk=document.pk %}" method="post"
+                                  style="display: inline;">
+                                {% csrf_token %}
+                                <input type="hidden" name="next" value="{{ request.path }}?edit=1">
+                                <button type="submit" class="delete-button btn btn-danger">Удалить</button>
+                            </form>
+                        {% endif %}
+
                     </td>
                 {% else %}
                     <td>
@@ -48,7 +58,7 @@
                 {% endif %}
 
                 <td>{{ document.status }}</td>
-                </td>
+
             </tr>
         {% endfor %}
         </tbody>
