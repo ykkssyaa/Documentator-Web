@@ -1,6 +1,19 @@
 {% extends 'documents/document_base.html' %}
+{% load static %}
 {% block content %}
-
     <h1>Настройки</h1>
-    
+
+    {% if perms.documents.delete_document %}
+    <form id="delete-documents-form" action="{% url 'documents:delete_all' %}" method="post">
+        {% csrf_token %}
+        <button type="button" id="delete-documents-button" class="btn btn-danger">Удалить все документы</button>
+    </form>
+
+    <div id="confirm-delete-modal" style="display: none;">
+        <p>Вы уверены, что хотите удалить все документы?</p>
+        <button id="confirm-delete-button" class="btn btn-danger">Да</button>
+        <button id="cancel-delete-button" class="btn btn-secondary">Отмена</button>
+    </div>
+    {% endif %}
+    <script src="{% static 'js/delete_confirmation.js' %}"></script>
 {% endblock %}
