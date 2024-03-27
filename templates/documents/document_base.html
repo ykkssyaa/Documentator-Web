@@ -5,8 +5,8 @@
             <div class="box_with_shadow  p-0">
                 <a class="w-100 btn btn-lg btn-primary mb-2" href="{% url 'documents:list' %}">Договоры</a>
 
-                {% if perms.documents.change_permissions %}
-                    <a class="w-100 btn btn-lg btn-primary mb-2" href="{% url 'documents:list' %}">Доступ должностей</a>
+                {% if user.is_authenticated and user.is_staff and perms.auth.change_permission%}
+                    <a class="w-100 btn btn-lg btn-primary mb-2" href="{% url 'admin:index' %}">Доступ должностей</a>
                 {% endif %}
 
                 {% if perms.documents.change_document and perms.documents.delete_document %}

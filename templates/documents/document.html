@@ -20,7 +20,7 @@
             <p class="p-0 m-0"> Дата завершения <span>{{ document.end_date.date }}</span></p>
         </div>
         <div class="col-5 align-items-center d-flex">
-            <p> Статус <span class="badge bg-primary">{{ document.status }}</span></p>
+            <p> Статус {% include 'elements/documents/doc_status.html' %}</p>
         </div>
     </div>
 
@@ -44,7 +44,7 @@
                 {% endfor %}
             </ul>
 
-        </div >
+        </div>
 
         <div class="col-7">
             <h3> Заметки </h3>

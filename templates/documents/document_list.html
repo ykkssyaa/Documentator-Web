@@ -13,15 +13,15 @@
     <table class="table mt-3 table-bordered align-middle">
         <thead>
         <tr>
-            <th>Название</th>
-            <th>Номер</th>
-            <th>Дата создания</th>
+            <th scope="col">Название</th>
+            <th scope="col">Номер</th>
+            <th scope="col">Дата создания</th>
             {% if edit %}
-                <th>Действия</th>
+                <th scope="col">Действия</th>
             {% else %}
-                <th>Обязательства</th>
+                <th scope="col">Обязательства</th>
             {% endif %}
-            <th>Статус</th>
+            <th scope="col">Статус</th>
         </tr>
         </thead>
 
@@ -30,7 +30,7 @@
             <tr>
                 <td><a href="{% url 'documents:document' number=document.number %}">{{ document.title }}</a></td>
                 <td>#{{ document.number }}</td>
-                <td>{{ document.signing_date.date }}</td>
+                <td class="col-2">{{ document.signing_date.date }}</td>
                 {% if edit %}
                     <td>
                         {% if perms.documents.change_document %}
@@ -60,7 +60,7 @@
                     </td>
                 {% endif %}
 
-                <td><span class="badge bg-primary"> {{ document.status }} </span></td>
+                <td>{% include 'elements/documents/doc_status.html' %}</td>
 
             </tr>
         {% endfor %}

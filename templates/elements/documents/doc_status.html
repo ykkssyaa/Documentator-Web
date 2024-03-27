@@ -1,0 +1,13 @@
+<span
+        {% if document.status == "Завершен" %}
+            class="badge bg-success"
+        {% elif document.status == "В обработке" %}
+            class="badge bg-warning"
+        {% elif document.status == "Подписан" %}
+            class="badge bg-primary"
+        {% elif document.status == "В исполнении" %}
+            class="badge bg-info"
+        {% else %}
+            class="badge bg-dark"
+        {% endif %}
+>{{ document.status }}</span>

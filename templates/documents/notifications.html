@@ -2,7 +2,7 @@
 {% block content %}
 
     <h1>Уведомления</h1>
-    <table class="table mt-3 table-bordered align-middle">
+    <table class="table mt-3 table-bordered">
         <thead>
         <tr>
             <th>Название</th>
@@ -18,8 +18,21 @@
                 <td><a href="{% url 'documents:document' number=document.number %}">{{ document.title }}</a></td>
                 <td>{{ document.number }}</td>
                 <td>{{ document.end_date.date }}</td>
-                <td><span class="badge bg-danger">{{ document.remaining_days }}</span></td>
-                <td><span class="badge bg-primary">{{ document.status }}</span></td>
+                <td>
+                    <!-- Задаю цвет исходя из оставшихся количества дней -->
+                    <span
+                            {% if document.remaining_days <= 1 %}
+                                class="badge bg-danger"
+                            {% elif document.remaining_days <= 4 %}
+                                class="badge bg-warning"
+                            {% else %}
+                                class="badge bg-info"
+                            {% endif %}
+
+                    >{{ document.remaining_days }}
+                    </span>
+                </td>
+                <td>{% include 'elements/documents/doc_status.html' %}</td>
             </tr>
         {% endfor %}
         </tbody>

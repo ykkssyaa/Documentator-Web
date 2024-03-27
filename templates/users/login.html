@@ -25,6 +25,12 @@
             background-color: #0056b3;
         }
 
+        input[type="text"],
+        input[type="password"],
+        input[type="email"] {
+            font-size: 24px;
+        }
+
     </style>
 
     <div>
@@ -32,7 +38,11 @@
             <h2 style="text-align: center">{{ title }}</h2>
             <form method="post">
                 {% csrf_token %}
-                {{ form.as_p }}
+
+                <div style="width: 50%; margin: 0 auto;">
+                    {{ form.as_p }}
+                </div>
+
                 <div style="text-align: center; padding-top: 10px">
                     <button class="btn btn-lg btn-primary " type="submit">Войти</button>
                 </div>
